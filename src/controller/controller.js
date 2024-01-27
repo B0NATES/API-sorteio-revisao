@@ -5,12 +5,29 @@ function dizerOla(req, res) {
 }
 
 
-async function cadastraEstudo (req, res) {
-   // const {} = req.body;
-}
-
 async function cadastraTema (req, res) {
-    
+    const {nome, descricao, categoria_id} = req.body;
+
+    try {
+        
+        const buscaCategoria = await knex('categorias').where('id', categoria_id).first();
+
+        console.log(buscaCategoria)
+
+        if (!buscaCategoria) {
+
+            console.log('caiu no if', buscaCategoria)
+
+
+            return res.status(404).json({ mensagem: "Categoria não encontrada" });
+        }
+
+    } catch (error) {
+
+        console.log(error.message)
+
+        return res.status(500).json({mensagem: 'Erro interno no servidor'})
+    }
 }
 
 async function cadastraCategoria (req, res){
@@ -24,9 +41,17 @@ async function cadastraCategoria (req, res){
         
     } catch (error) {
         console.log(error.message)
-        res.status(500).json({mensagem: "Erro interno do servidor"})
+        return res.status(500).json({mensagem: "Erro interno do servidor"})
     }
 
+}
+
+async function listarCategoria (req, res) {
+    
+    const lista = await knex('categorias').returning('*')
+    
+    
+    res.status(200).json({lista})
 }
 
 
@@ -34,5 +59,7 @@ async function cadastraCategoria (req, res){
 module.exports = {
     dizerOla,
     cadastraCategoria,
+    listarCategoria,
+    cadastraTema,
 
 }
