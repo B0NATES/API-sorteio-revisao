@@ -34,6 +34,15 @@ async function cadastraCategoria (req, res){
     const {nome} = req.body;
 
     try {
+
+        const verificarCategoria = await knex('categorias').select('nome').where({nome})
+
+        console.log(verificarCategoria)
+
+        if(verificarCategoria){
+            return res.status(400).json({mensagem: 'A categoria já existe'})
+        }
+
         const cadastraCategoria = await knex('categorias').insert({nome});
 
         return res.status(201).json({mensagem: `Categoria ${nome} adicionada`})
