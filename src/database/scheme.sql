@@ -14,6 +14,6 @@ CREATE TABLE temas (
 CREATE TABLE estudos (
     id SERIAL PRIMARY KEY,
     tema_id INTEGER REFERENCES temas(id),
-    data_estudo DATE,
     categoria_id INTEGER REFERENCES categorias(id)
+    data_estudo DATE,
 );
