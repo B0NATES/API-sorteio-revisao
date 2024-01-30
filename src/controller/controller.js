@@ -9,14 +9,28 @@ async function cadastraTema(req, res) {
     const { nome, descricao, categoria_id } = req.body;
 
     try {
-        const buscaCategoria = await knex('categorias').where('id', categoria_id).first();
-
-        console.log('Resultado da busca:' , buscaCategoria)
-
-        if (!buscaCategoria) {
+        const numberCategoriaId = parseInt(categoria_id);
+        console.log('NUMERO DA CATEGORIA',numberCategoriaId);
+    
+        const buscaCategoria = await knex('categorias').where('id', numberCategoriaId);
+        const booleanBuscaCategoria = buscaCategoria.length > 0;
+    
+        console.log('CATEGORIA EXISTE', booleanBuscaCategoria);
+    
+        if (!booleanBuscaCategoria) {
             return res.status(404).json({ mensagem: `Categoria com ID ${categoria_id} não encontrada` });
         }
+    
+        const buscaTema = await knex('temas').where('nome', nome);
+        const booleanBuscaTema = buscaTema.length > 0;
+    
+        console.log('RESULTADO DA BUSCA DO TEMA: ', booleanBuscaTema);
+    
+        if (booleanBuscaTema) {
+            return res.status(400).json({ mensagem: `${nome} já existe` });
+        }
 
+        /*
         const inserirTema = await knex('temas').insert(
             {
                 nome,
@@ -24,11 +38,10 @@ async function cadastraTema(req, res) {
                 categoria_id
             });
 
-        console.log('Inserção do tema:',inserirTema)
+    
 
         
 
-/*
         const inserirEstudo = await knex ('estudos').insert(
             {
 
