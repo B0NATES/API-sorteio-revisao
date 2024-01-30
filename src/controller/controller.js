@@ -24,31 +24,39 @@ async function cadastraTema(req, res) {
         const buscaTema = await knex('temas').where('nome', nome);
         const booleanBuscaTema = buscaTema.length > 0;
     
-        console.log('RESULTADO DA BUSCA DO TEMA: ', booleanBuscaTema);
+        console.log('TEMA EXISTE: ', booleanBuscaTema);
     
         if (booleanBuscaTema) {
             return res.status(400).json({ mensagem: `${nome} já existe` });
         }
 
-        /*
+    
         const inserirTema = await knex('temas').insert(
             {
                 nome,
                 descricao,
                 categoria_id
-            });
+            }).returning('*');
+
+
+            console.log('INSERÇÃO DO TEMA',inserirTema)
+
+
+
+            const objInserirTema = inserirTema[0]
 
     
+            
+            const inserirEstudo = await knex ('estudos').insert(
+                {
+                    tema_id: objInserirTema.id,
+                    data_estudo: new Date(),
+                    categoria_id: objInserirTema.categoria_id
+                }
+                ).returning('*');
+            
 
-        
-
-        const inserirEstudo = await knex ('estudos').insert(
-            {
-
-            }
-        )
-
-        */
+            return res.status(201).json({mensagem: `Tema ${nome} cadastrado com sucesso!`})
 
     } catch (error) {
 
@@ -75,7 +83,7 @@ async function cadastraCategoria(req, res) {
         }
 
         
-        const inserir = await knex('categorias').insert({ nome });
+        const inserir = await knex('categorias').insert({ nome }).returning('*');
 
         return res.status(201).json({ mensagem: `Categoria ${nome} adicionada` });
     } catch (error) {
