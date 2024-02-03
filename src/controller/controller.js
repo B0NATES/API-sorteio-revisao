@@ -119,13 +119,33 @@ async function listarEstudo(req, res) {
 }
 
 
+
 async function sortearEstudo(req, res) {
+
+    const {categoria_id} = req.body
 
     try {
 
-        const lista = await knex('estudos');
-        const limit = lista.length;
-        const sorteio = funcoes.gerarNumAleatorio(limit);
+        
+
+
+        if (!categoria_id){
+            const listaGeal = await knex ('estudos')
+
+            const sorteio = funcoes.gerarNumAleatorio(listaGeal.length)
+
+            const idEstudo = await knex('estudos').where('id', sorteio)
+
+            const obterTema = await knex('temas').where('id', idEstudo[0].tema_id);
+
+            console.log(idEstudo)
+
+            return res.status(200).json(obterTema)
+        }
+
+        const filtroPorCategoria = await knex('estudos').where('categoria_id', categoria_id) 
+
+        const sorteio = funcoes.gerarNumAleatorio(filtroPorCategoria.length);
 
         const idEstudo = await knex('estudos').where('id', sorteio);
 
@@ -138,6 +158,7 @@ async function sortearEstudo(req, res) {
         return res.status(200).json(obterTema)
 
     } catch (error) {
+        console.log(error.message)
         return res.status(500).json({ mensagem: 'Erro interno no servidor' })
     }
 

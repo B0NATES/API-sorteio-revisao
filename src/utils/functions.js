@@ -1,4 +1,8 @@
+const joi = require ('joi');
 
+const validarBody = joy.object({
+    
+})
 
 function gerarNumAleatorio (numLimite) {
     
