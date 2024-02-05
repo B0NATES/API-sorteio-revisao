@@ -24,7 +24,17 @@ const schemavalidaBodyTema = joi.object({
         "number.base" : "O campo categoria_id deve ser um número inteiro.",
         "number.min": "O campo categoria_id deve ser no mínimo 1"
     })
-})
+});
+
+
+
+const schemaBodySorteio = joi.object({
+    categoria_id: joi.number().integer().allow(null).messages({
+        "number.base": "O campo categoria_id deve ser um número",
+        
+    })
+});
+
 
 function gerarNumAleatorio (numLimite) {
     
@@ -41,4 +51,5 @@ module.exports  =
     gerarNumAleatorio,
     schemaBodyCategoria,
     schemavalidaBodyTema,
+    schemaBodySorteio,
 }

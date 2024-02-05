@@ -121,52 +121,47 @@ async function listarEstudo(req, res) {
 
 
 async function sortearEstudo(req, res) {
-
-    const {categoria_id} = req.body
+    const { categoria_id } = req.body;
 
     try {
+        let verificarEstudo;
 
-        
+        if (categoria_id) {
+            const verificarCategoria = await knex('categorias').where('id', categoria_id);
+            const catExiste = verificarCategoria.length > 0;
 
+            if (!catExiste) {
+                return res.status(404).json({ mensagem: "Categoria não existe" });
+            }
 
-        if (!categoria_id){
-            const listaGeal = await knex ('estudos')
-
-            const sorteio = funcoes.gerarNumAleatorio(listaGeal.length)
-
-            const idEstudo = await knex('estudos').where('id', sorteio)
-
-            const obterTema = await knex('temas').where('id', idEstudo[0].tema_id);
-
-            console.log(idEstudo)
-
-            return res.status(200).json(obterTema)
+            verificarEstudo = await knex('estudos').where('categoria_id', categoria_id);
+        } else {
+            verificarEstudo = await knex('estudos');
         }
 
-        const filtroPorCategoria = await knex('estudos').where('categoria_id', categoria_id) 
+        const estudoExiste = verificarEstudo.length > 0;
 
-        const sorteio = funcoes.gerarNumAleatorio(filtroPorCategoria.length);
+        if (!estudoExiste) {
+            return res.status(404).json({ mensagem: "Ainda não existem estudos para essa categoria ou categoria inexistente" });
+        }
 
-        const idEstudo = await knex('estudos').where('id', sorteio);
+        const sorteio = funcoes.gerarNumAleatorio(verificarEstudo.length);
 
-        const idEstudoInObj = idEstudo[0]
+        if (verificarEstudo.length <= 1) {
+            const obterTema = await knex('temas').where('id', verificarEstudo[0].tema_id).first();
+            return res.status(200).json(obterTema);
+        }
 
-        const obterTema = await knex('temas').where('id', idEstudoInObj.tema_id);
-
-        console.log('RESULTADO: ', obterTema)
-
-        return res.status(200).json(obterTema)
+        const temaSorteado = await knex('temas').where('id', verificarEstudo[sorteio - 1].tema_id);
+        return res.status(200).json(temaSorteado);
 
     } catch (error) {
-        console.log(error.message)
-        return res.status(500).json({ mensagem: 'Erro interno no servidor' })
+        console.log(error.message);
+        return res.status(500).json({ mensagem: 'Erro interno no servidor' });
     }
-
-
-
-
-
 }
+
+
 
 
 module.exports = {

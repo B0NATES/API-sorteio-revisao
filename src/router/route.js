@@ -25,8 +25,12 @@ controller.cadastraTema);
 
 
 routes.get('/categorias', controller.listarCategoria);
+
 routes.get('/estudos', controller.listarEstudo);
-routes.get('/sortear', controller.sortearEstudo);
+
+routes.get('/sortear', 
+md.validaBodySorteio, 
+controller.sortearEstudo);
 
 
 module.exports = routes;
