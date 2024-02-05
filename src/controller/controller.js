@@ -161,6 +161,20 @@ async function sortearEstudo(req, res) {
     }
 }
 
+async function listarTemas (req, res){
+    try{
+
+        const obterTemas = await knex ('temas').returning("*")
+        
+        return res.status(200).json(obterTemas)
+    
+    }catch (error){
+
+        console.log(error.message);
+        return res.status(500).json({mensagem: 'Erro interno no servidor'})
+    }
+}
+
 
 
 
@@ -171,4 +185,5 @@ module.exports = {
     cadastraTema,
     listarEstudo,
     sortearEstudo,
+    listarTemas,
 }

@@ -16,7 +16,7 @@ md.validaCadastroCategoriaBody,
 controller.cadastraCategoria);
 
 
-routes.post('/tema', 
+routes.post('/temas', 
 md.validarBodyTema,
 controller.cadastraTema);
 
@@ -31,6 +31,8 @@ routes.get('/estudos', controller.listarEstudo);
 routes.get('/sortear', 
 md.validaBodySorteio, 
 controller.sortearEstudo);
+
+routes.get('/temas', controller.listarTemas)
 
 
 module.exports = routes;
