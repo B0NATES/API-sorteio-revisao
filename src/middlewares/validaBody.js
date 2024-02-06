@@ -52,10 +52,24 @@ async function validaBodySorteio (req, res, next){
     }
 }
 
+async function validaBodyPutTema(req, res, next) {
+
+    try {
+
+        await functions.schemaBodyAtualizarTema.validateAsync(req.body)
+        
+        next()
+    }catch (error) {
+        console.log(error.message);
+        return res.status(400).json({error: error.message})
+    }
+}
+
 
 
 module.exports = {
     validaCadastroCategoriaBody,
     validarBodyTema,
     validaBodySorteio,
+    validaBodyPutTema,
 }

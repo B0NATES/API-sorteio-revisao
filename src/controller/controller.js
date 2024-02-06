@@ -161,19 +161,47 @@ async function sortearEstudo(req, res) {
     }
 }
 
-async function listarTemas (req, res){
-    try{
+async function listarTemas(req, res) {
+    try {
 
-        const obterTemas = await knex ('temas').returning("*")
-        
+        const obterTemas = await knex('temas').returning("*")
+
         return res.status(200).json(obterTemas)
-    
-    }catch (error){
+
+    } catch (error) {
 
         console.log(error.message);
-        return res.status(500).json({mensagem: 'Erro interno no servidor'})
+        return res.status(500).json({ mensagem: 'Erro interno no servidor' })
     }
 }
+
+
+async function atualizarTema(req, res) {
+    const { idOuNome } = req.params;
+    const { nome, descricao, categoria_id } = req.body;
+
+    try {
+        let tema;
+
+        if (!isNaN(idOuNome)) {
+            tema = await knex('temas')
+                .where('id', idOuNome)
+                .update({ nome, descricao, categoria_id })
+                .returning(['id', 'nome', 'descricao', 'categoria_id']);
+        } else {
+            tema = await knex('temas')
+                .where('nome', idOuNome)
+                .update({ nome, descricao, categoria_id })
+                .returning(['id', 'nome', 'descricao', 'categoria_id']);
+        }
+
+        return res.status(200).json(tema);
+    } catch (error) {
+        console.error('Erro ao atualizar o tema:', error);
+        return res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+}
+
 
 
 
@@ -186,4 +214,5 @@ module.exports = {
     listarEstudo,
     sortearEstudo,
     listarTemas,
+    atualizarTema,
 }

@@ -21,6 +21,11 @@ md.validarBodyTema,
 controller.cadastraTema);
 
 
+routes.put('/temas/:idOuNome', 
+md.validaBodyPutTema,
+controller.atualizarTema)
+
+
 
 
 

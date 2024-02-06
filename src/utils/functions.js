@@ -36,6 +36,29 @@ const schemaBodySorteio = joi.object({
 });
 
 
+const schemaBodyAtualizarTema = joi.object({
+    nome: joi.string().required().messages({
+        "string.base" : "O campo nome deve ser uma string",
+        "string.empty": "O campo nome não pode ser vazio"
+    }),
+    descricao: joi.string().required().messages({
+        "string.base" : "O campo descricao deve ser uma string",
+        "string.empty": "O campo descricao não pode ser vazio"
+    }),
+    categoria_id: joi.number().required().messages({
+        "number.base" : "O campo categoria_id deve ser um número"
+    })
+}).messages({
+    "object.missing": "Ao menos um campo deve ser preenchido"
+});
+
+
+
+
+
+
+
+
 function gerarNumAleatorio (numLimite) {
     
     let limite = parseInt(Math.random() * numLimite + 1);
@@ -46,10 +69,14 @@ function gerarNumAleatorio (numLimite) {
 
 
 
+
+
+
 module.exports  =
 {
     gerarNumAleatorio,
     schemaBodyCategoria,
     schemavalidaBodyTema,
     schemaBodySorteio,
+    schemaBodyAtualizarTema,
 }
